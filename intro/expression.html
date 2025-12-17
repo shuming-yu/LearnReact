@@ -11,6 +11,16 @@
 -->
 <script>
 // 表達式與陳述式的差異
+
+  // 宣告式
+  function fn(params) {
+
+  }
+
+  // 表達式
+  const fn = function() {
+
+  }
 </script>
 
 
@@ -29,6 +39,15 @@ function App() {
       <p className="card-text">{ data.description }</p>
       <a href={data.link} target="_blank" className="btn btn-primary">Go somewhere</a>
     </div>
+
+    <br />
+    { data.name ? <strong>歡迎卡斯伯回家！</strong> : <strong>訪客您好！</strong> }
+
+    {/*陳述式無法加入JSX使用*/}
+    {/* if(data.name) {} */}
+
+    {/*函式可運行*/}
+    { function() { return 2*2 }() }
   </div>
 }
 
