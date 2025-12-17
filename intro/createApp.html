@@ -3,9 +3,38 @@
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">環境安裝</h1><small>檔名：<code>createApp.html</code></small></div>
 <!-- 🔥🔥練習開始🔥🔥 -->
-<!-- 五步驟，載入 React -->
+<!-- 五步驟，載入 React-development -->
 <!-- https://reactjs.org/docs/cdn-links.html#gatsby-focus-wrapper -->
 <!-- https://reactjs.org/docs/add-react-to-a-website.html#quickly-try-jsx -->
+
+<!-- step 1: 載入React, Babel -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- step 3: 加入root元素 -->
+<div id="root"></div>
+
+<script type="text/babel">
+  // step 2: 檢查資源是否正確載入
+  console.log("React:", React);
+  console.log("ReactDOM:", ReactDOM);
+
+  // step 4: 建立 App 元件
+  function App() {
+    return (
+      <div>
+        <h1>Hello, React!</h1>
+        <p>恭喜你，已經成功建立 React 開發環境！</p>
+      </div>
+    );
+  }
+
+  // step 5: 將 App 元件渲染到 root 元素中
+  const el = document.getElementById("root");
+  const root = ReactDOM.createRoot(el);
+  root.render(<App />);
+</script>
 
 <!-- 補充說明：定義 App 元件時，可自訂名稱但請使用大寫做開頭 -->
 <!-- 詳細說明文件：https://zh-hant.reactjs.org/docs/jsx-in-depth.html#user-defined-components-must-be-capitalized -->
