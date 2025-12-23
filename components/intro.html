@@ -9,7 +9,26 @@
   const App = () => {
     return (
       <>
-        React
+        <Header imgUrl="https://picsum.photos/800/300" />
+
+        <div className="row">
+          <div className="col-4">
+            <Sidebar list={['選項一', 'Ben', 'Winnie']} />
+          </div>
+          <div className="col-8">
+            <ChartJs data={[
+              { label: '小明', value: 1000 },
+              { label: '杰倫', value: 10000 },
+              { label: '漂亮阿姨', value: 3000 },
+              { label: '卡斯伯', value: 2500 },
+            ]} />
+          </div>
+        </div>
+
+        <Footer>
+          <p className="mb-2">這是頁腳區域，可以放一些版權宣告或其他資訊</p>
+          <small className="text-black-50">© 2024 六角學院 React 課程專屬文件</small>
+        </Footer>
       </>
     );
   };
