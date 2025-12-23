@@ -8,8 +8,57 @@
 <script type="text/babel">
   // 不要直接寫一個過大的應用，先從「運用元件開始」
   const App = () => {
+    const products = [
+      {
+        header: '基本版',
+        title: '$1000',
+        every: '/月',
+        descr: '基本每週配給，包含高麗菜、空心菜，健康不馬乎',
+        button: '免費試用',
+      },
+      {
+        header: '進階版',
+        title: '$6000',
+        every: '月',
+        descr: '奶蛋魚肉經營養師精確估計，適合三人小家庭使用，每週一、四配送',
+        button: '永保健康',
+      },
+      {
+        header: '企業版',
+        title: '請洽客服',
+        every: '',
+        descr: '多少人數均可訂製，5 ~ 1000 人團體均適用',
+        button: '大吃大喝方案',
+      },
+    ]; 
+
     return (
       <>
+        <h2>月月送菜到你家</h2>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore molestiae
+          facere asperiores sit aspernatur laboriosam ipsum, excepturi fuga,
+          consequuntur cupiditate, nam a doloremque error adipisci nulla reiciendis
+          itaque odio voluptatibus.
+        </p>
+
+        {products.map((item, index) => (
+          <div className="card mb-4">
+              <div className="card-header">
+                <h4 className="my-0">{item.header}</h4>
+              </div>
+              
+              <div className="card-body">
+                <h1 className="card-title">
+                  {item.title}<small className="text-muted">{item.every}</small>
+                </h1>
+                <p>{item.descr}</p>
+                <button type="button" className="btn btn-outline-primary">
+                  {item.button}
+                </button>
+              </div>
+            </div>
+          ))}
       </>
     );
   };
