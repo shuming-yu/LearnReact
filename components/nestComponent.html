@@ -5,8 +5,10 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-  const PrimaryBtn = ({className, callToAction}) => {
-    return <button type="button" className={`btn ${className}`}>{callToAction}</button>
+  const PrimaryBtn = ({className, children}) => {
+    console.log("children:", children);
+    
+    return <button type="button" className={`btn ${className}`}>{children}</button>
   }
 
   const Card = ({title, price, content, callToAction}) => {
@@ -20,8 +22,14 @@
 
         {
           title === '企業版' ? 
-          <PrimaryBtn className="btn-primary" callToAction={callToAction} /> :
-          <PrimaryBtn className="btn btn-outline-primary" callToAction={callToAction} />
+          <PrimaryBtn className="btn-primary">
+            {/* <small>聯絡我們</small> */}
+            <i className="bi bi-gem" />{callToAction}<i className="bi bi-gem" />
+          </PrimaryBtn>
+          :
+          <PrimaryBtn className="btn-outline-primary">
+            {callToAction}
+          </PrimaryBtn>
         }
       </div>
     </div>)
@@ -62,6 +70,8 @@
             return <Card  key={product.id} title={product.title} price={product.price} content={product.content} callToAction={product.callToAction}></Card>
           })
         }
+        
+        <img src="./children.jpg" alt="" />
       </>
     )
   }
