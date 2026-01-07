@@ -7,7 +7,7 @@
 <div id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<script type="text/babel">
+<!-- <script type="text/babel">
   // 資料來源：https://data.gov.tw/dataset/6069
   // 天氣圖示：https://www.cwb.gov.tw/V8/C/K/Weather_Icon.html
   // 因為氣象圖示相當多，所以本範例中僅採用已下載天氣資料為主，其餘圖示同學可至上方氣象局網站下載
@@ -17,45 +17,148 @@
     const options = { hour: 'numeric', minute: 'numeric' }
     console.log(location);
 
-    
+    const Time = ({ startTime, endTime }) => {
+      return (<div className="text-center">
+        <div className="h4">{new Date(startTime).toLocaleDateString(undefined, { day: 'numeric'})}</div>
+        {new Date(startTime).toLocaleString(undefined, options)} <br />
+          ~ <br />
+        {new Date(endTime).toLocaleString(undefined, options)}
+      </div>)
+    }
+
+    const Card = ({ title, wx, pop }) => {
+      return (
+        <div className='card text-center'>
+          <div className='card-header'>
+            <h4 className='my-0'>{title}</h4>
+          </div>
+          <div className='card-body'>
+            <div className="row row-cols-3">
+              {wx.time.map((time, key) => (
+                <div className="col" key={key}>
+                  <Time startTime={time.startTime} endTime={time.endTime}></Time>
+                  <img src={`./weatherIcon/${time.parameter.parameterName}.svg`} alt={time.parameter.parameterName} className="img-fluid mt-3"/>
+                  <div className="mt-2">{time.parameter.parameterName}</div>
+                  <div className="mt-3">
+                    <i className="bi bi-umbrella-fill"></i> {pop.time[key].parameter.parameterName}%
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const Weather = ({children}) => {
+      return (<>
+        {children}
+        <div className='row row-cols-2 g-4'>
+          {location.map((city) => {
+            return (
+              <div className='col' key={city.locationName}>
+                {/* city.weatherElement[0] 天氣概況 */}
+                {/* city.weatherElement[1] 最高氣溫 */}
+                {/* Pop city.weatherElement[4] 降雨率 */}
+                <Card
+                  title={city.locationName}
+                  wx={city.weatherElement[0]} 
+                  pop={city.weatherElement[4]}
+                ></Card>
+              </div>
+            );
+          })}
+        </div>
+      </>)
+    }
 
     const App = () => {
       return (
         <>
-          <h2 className="my-3">三十六小時天氣預報</h2>
-          <div className="row row-cols-2 g-4">
-            {location.map((city) => {
+          <Weather>
+            <h2 className="my-3">三十六小時天氣預報</h2>
+          </Weather>
+        </>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  })();
+</script> -->
+
+<script type="text/babel">
+  // 資料來源：https://data.gov.tw/dataset/6069
+  // 天氣圖示：https://www.cwb.gov.tw/V8/C/K/Weather_Icon.html
+  // 因為氣象圖示相當多，所以本範例中僅採用已下載天氣資料為主，其餘圖示同學可至上方氣象局網站下載
+  (async () => {
+    const data = await axios.get('./F-C0032-001.json');
+    const { location } = data.data.cwbopendata.dataset;
+    const options = { hour: 'numeric', minute: 'numeric' }
+    console.log("location:", location);
+
+    const Time = ({startTime, endTime}) => {
+      return <>
+        <div className="h4 my-2">{new Date(startTime).toLocaleDateString(undefined, { day: 'numeric'})}</div>
+        {new Date(startTime).toLocaleString(undefined, options)}<br />
+        ~<br />
+        {new Date(endTime).toLocaleString(undefined, options)}
+      </>
+    }
+
+    const Card = ({title, wx, pop}) => {
+      return (
+      <div className='card text-center'>
+        <div className='card-header'>
+          <h4 className='my-0'>{title}</h4>
+        </div>
+
+        <div className='card-body'>
+          <div className="row row-cols-3">
+            {wx.time.map((item, index) => {
               return (
-                <div className="col" key={city.locationName}>
-                  <div className='card text-center'>
-                    <div className='card-header'>
-                      <h4 className='my-0'>{city.locationName}</h4>
-                    </div>
-        
-                    <div className='card-body'>
-                      <div className="row row-cols-3">
-                        {city.weatherElement[0].time.map((item, index) => {
-                          return (
-                          <div className="col" key={index}>
-                            <div className="h4 my-2">{new Date(item.startTime).toLocaleDateString(undefined, { day: 'numeric'})}</div>
-                            {new Date(item.startTime).toLocaleString(undefined, options)}<br />
-                            ~<br />
-                            {new Date(item.endTime).toLocaleString(undefined, options)}
-                            <img src={`./weatherIcon/${item.parameter.parameterName}.svg`} alt={item.parameter.parameterName} />
-                            <div className="mt-2">{item.parameter.parameterName}</div>
-                            <div className="mt-3">
-                              <i className="bi bi-umbrella-fill"></i> {city.weatherElement[4].time[index].parameter.parameterName}%
-                            </div>
-                          </div>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  </div>
+              <div className="col" key={index}>
+                <Time startTime={item.startTime} endTime={item.endTime} />
+                <img src={`./weatherIcon/${item.parameter.parameterName}.svg`} alt={item.parameter.parameterName} />
+                <div className="mt-2">{item.parameter.parameterName}</div>
+                <div className="mt-3">
+                  <i className="bi bi-umbrella-fill"></i> {pop.time[index].parameter.parameterName}%
                 </div>
+              </div>
               )
             })}
           </div>
+        </div>
+      </div>
+      )
+    }
+
+    const Weather = ({children}) => {
+      return (
+      <>
+        {children}
+        <div className="row row-cols-2 g-4">
+          {location.map((city) => {
+            return (
+              <div className="col" key={city.locationName}>
+                <Card
+                  title={city.locationName}
+                  wx={city.weatherElement[0]}
+                  pop={city.weatherElement[4]}
+                />
+              </div>
+            )
+          })}
+        </div>
+      </>
+      )
+    }
+
+    const App = () => {
+      return (
+        <>
+          <Weather>
+            <h2 className="my-3">三十六小時天氣預報</h2>
+          </Weather>
         </>
       );
     };
