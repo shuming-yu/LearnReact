@@ -5,18 +5,52 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
+const { useState } = React;
 // #1 useState 的方法在哪裡？
+console.log("useState:", useState);
+
+function useCustomState(params) {
+  // React處理
+  // 純值, 方法(通知元件, 值已更新)
+  return [ params, function dispatchSetState() {} ]
+}
+
+const [text, useText] = useCustomState('這是一段文字');
+
 
 // #2 useState 僅能在 Component 內運作
+// 沒有辦法在元件外使用useState, 無法進行通知
+// const [text, setText] = useState('這是一段文字');
 
 
 // #3 state 是 ReadOnly
 // #3-1 為了讓 React 知道資料已更新，所以會使用另一個方法進行觸發
 const App = () => {
+  const [num, setNum] = useState(0);
+  const [arr, setArr] = useState([1, 2, 3]);
+
   // #3-2 這影響了許多會操作原始值的方法
+  function remove() {
+    // arr.pop(); --- WRONG ---
+    // setArr(arr); --- WRONG ---
+
+    // 正確寫法
+    const newArr = arr.slice(0, arr.length - 1);
+    setArr(newArr);
+  }
 
   return (<div>
-    
+    {num}
+    <br />
+    {/* 按鈕雖然會讓 num 自增，但 React 不知道 num 已經改變，所以畫面不會更新 */}
+    <button type="button" onClick={() => num++}>點我++</button>
+    <button type="button" onClick={() => setNum(num + 1)}>點我+1</button>
+
+    <ul>
+      {arr.map((i) => <li key={i}>{i}</li>)}
+    </ul>
+    <button onClick={() => setArr([...arr, arr.length + 1])}>新增項目</button>
+    <button onClick={remove}>移除最後一項</button>
   </div>)
 }
 
