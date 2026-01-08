@@ -6,11 +6,19 @@
 <div id="root"></div>
 <script type="text/babel">
 // #1 取出 useState 的方法
+const { useState } = React;
 
 const App = () => {
   // #2 定義狀態
+  // 前者變數, 後者設定值的方法
+  const [num, setNum] = useState(0);
+
   return (<div>
+    <img src="./hooks.jpg" alt="" style={{ width: '800px', height: 'auto' }} />
+    <br />
     {/* 使用 set 將值寫入 */}
+    {num}
+    <button type="button" onClick={() => setNum(num + 1)}>add</button>
     </div>)
 }
 
