@@ -20,8 +20,19 @@ const SearchBox = ({onSearchHandler, filterString}) => {
     />
   </div>
 }
+
+const Card = ({url, descr}) => {
+  return <>
+    <div className="card">
+        <img src={url} className="card-img-top img-cover" height="300" alt={descr} />
+      </div>
+  </>
+}
+
 const App = () => {
   const [filterString, setFilterString] = useState('animal');
+  const [jsonData, setJsonData] = useState([]);
+
   const onSearchHandler = (e) => {
     setFilterString(e.target.value);
   }
@@ -31,6 +42,7 @@ const App = () => {
       try {
         const result = await axios.get(`${api}?client_id=${accessKey}&query=${filterString}`);
         console.log(result);
+        setJsonData(result.data.results);
       } catch (error) {
         console.log(error);
       }
@@ -38,7 +50,18 @@ const App = () => {
   }, []);
 
   return (<div>
+    {/* JSON.stringify(jsonData) */}
     <SearchBox onSearchHandler={onSearchHandler} filterString={filterString} />
+
+    <div className="row row-cols-2">
+      {jsonData.map((item, index) => {
+        return (
+          <div className="col" key={index}>
+            <Card url={item.urls.small} descr={item.alt_description} />
+          </div>
+        );
+      })}
+    </div>
   </div>)
 }
 
