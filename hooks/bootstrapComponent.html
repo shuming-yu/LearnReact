@@ -4,13 +4,49 @@
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">Bootstrap 元件與 React</h1><small>檔名：<code>bootstrapComponent.html</code></small></div>
 <!-- 🔥🔥練習開始🔥🔥 -->
 <!-- 原生 Bootstrap  -->
-<script>
-  // ## Modal
-  // // #1 生成實體
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" id="btnModal">
+  Launch demo modal
+</button>
 
-  // // #2 套用實體方法
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // ## 在 JS 中套用 Bootstrap 語法
+  // #1 生成實體
+  const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+  console.log("modal:", modal);
+
+  // #2 套用實體方法
+  // modal.show()
+  const btnModal = document.getElementById('btnModal');
+  btnModal.addEventListener('click', function() {
+    modal.show();
+  });
 
   // #3 套用監聽
+  const exampleModal = document.getElementById('exampleModal');
+  exampleModal.addEventListener('shown.bs.modal', function (event) {
+    console.log('Modal is open!!');
+  })
 </script>
 <!--  -->
 <div id="root"></div>
@@ -18,22 +54,38 @@
 const { useState, useEffect } = React;
 
 
+let reactModal; //定義變數宣告在外層，讓 useEffect 和 openModal 都能使用
 const App = () => {
   // #1 在 React 中套用 Bootstrap 語法
   // #1-1 錯誤寫法（DOM 尚未生成）
+  // const reactModal = new bootstrap.Modal('#reactModal');
 
   // #1-2 DOM 已經生成
+  // useEffect(() => {
+  //   const reactModal = new bootstrap.Modal('#reactModal');
+
+  //   setTimeout(() => {
+  //     reactModal.show();
+  //   }, 1000);
+  // });
+
 
 
   // #2 錯誤寫法
   // 2-1 作用域錯誤
+  useEffect(() => {
+    reactModal = new bootstrap.Modal('#reactModal');
+  });
 
   // 2-2 操作
+  function openModal() {
+    reactModal.show();
+  }
 
   return (
     <>
-      <button type="button" className="btn btn-primary" >打開 Modal</button>
-      <div className="modal fade" tabIndex="-1" id="newModal">
+      <button type="button" className="btn btn-primary" onClick={openModal}>打開 Modal</button>
+      <div className="modal fade" tabIndex="-1" id="reactModal">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
