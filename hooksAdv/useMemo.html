@@ -5,16 +5,25 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, useMemo } = React;
 
 let num = 0;
 const App = () => {
   const [price, setPrice] = useState(100);
   const [qty, setQty] = useState(1);
+  const [text, setText] = useState('');
 
   const total = price * qty;
   num++;
   console.log(`程式碼已經被計算 ${num} 次`);
+  console.log('total:', total);
+  
+
+  // 減少不必要的計算，當 price 或 qty 沒有改變時，就不需要重新計算 total 的值，這時候就可以使用 useMemo 來優化性能。
+  const memoTotal = useMemo(() => {
+    console.log('useMemo 計算 total');  // 只會在 price 或 qty 改變時才會被執行
+    return price * qty;
+  }, [price, qty]);
 
 
   return (<>
@@ -22,8 +31,13 @@ const App = () => {
     <input type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
     <input type="number" value={qty} onChange={(e) => setQty(parseInt(e.target.value))} />
     <div>
-      總價：{total}
+      總價：{total}, useMemo 計算的總價：{memoTotal}
     </div>
+
+    {/* 這裡的 text 是每次 render 都會被重新計算的，但它不會影響 total 的計算，
+        所以我們可以使用 useMemo 來優化 total 的計算，讓它只在 price 或 qty 改變時才重新計算 
+    */}
+    <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
   </>)
 }
 

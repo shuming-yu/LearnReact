@@ -51,6 +51,14 @@
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
 
+    const filterProducts = useMemo(() => {
+      
+      return [...products]
+              .filter((product) => product.title.match(search))
+              .sort((a, b) => ascending ? a.price - b.price : b.price - a.price);
+
+    }, [ascending, search]);
+
     return (
       <>
         升降冪：
@@ -67,6 +75,26 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+
+        <table className="table">
+          <tbody>
+            {filterProducts.map((produc) => {
+              return (
+                <tr key={produc.id}>
+                  <td>
+                    <img
+                      src={produc.imageUrl}
+                      alt={produc.title}
+                      style={{ width: '100px' }}
+                    />
+                  </td>
+                  <td>{produc.title}</td>
+                  <td>{produc.price}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </>
     );
   };

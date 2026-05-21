@@ -6,7 +6,7 @@
 
 <div id="root"></div>
 <script type="text/babel">
-  const { useState, useEffect, useMemo } = React;
+  const { useState, useEffect, useMemo, memo } = React;
   const sampleData = [
     {
       id: 1,
@@ -45,11 +45,53 @@
     },
   ];
 
+
+  // const DataTable = ({filterProducts}) => {
+  //   console.log('DataTable render');
+
+  //   return (
+  //     <table className='table'>
+  //       <tbody>
+  //         {filterProducts.map((product) => {
+  //           return (
+  //             <tr key={product.id}>
+  //               <td>{product.title}</td>
+  //               <td>{product.price}</td>
+  //             </tr>
+  //           );
+  //         })}
+  //       </tbody>
+  //     </table>
+  //   );
+  // }
+
+
+  // memo
+  const DataTable = memo(({filterProducts}) => {
+    console.log('DataTable render memo');
+
+    return (
+      <table className='table'>
+        <tbody>
+          {filterProducts.map((product) => {
+            return (
+              <tr key={product.id}>
+                <td>{product.title}</td>
+                <td>{product.price}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    );
+  })
+
   let num = 0;
   const App = () => {
     const [products, setProducts] = useState(sampleData);
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
+    const [text, setText] = useState('');
 
     const filterProducts = useMemo(() => {
       return [...products]
@@ -63,6 +105,14 @@
 
     return (
       <>
+        <h2>memo 可以用來包裹一個元件，讓它在 props 沒有改變的情況下不會重新 render，這樣就可以優化性能，避免不必要的 render。</h2>
+
+        <input
+          type='text'
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <br />
         升降冪：
         <input
           type='checkbox'
@@ -77,6 +127,7 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        {/*
         <table className='table'>
           <tbody>
             {filterProducts.map((product) => {
@@ -89,6 +140,8 @@
             })}
           </tbody>
         </table>
+        */}
+        <DataTable filterProducts={filterProducts} />
       </>
     );
   };
