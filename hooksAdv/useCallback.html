@@ -5,7 +5,7 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-  const { useState, useEffect, useMemo, memo } = React;
+  const { useState, useEffect, useMemo, memo, useCallback } = React;
   const sampleData = [
     {
       id: 1,
@@ -45,7 +45,7 @@
   ];
 
   // 使用 memo
-  const DataTable = memo(({filterProducts}) => {
+  const DataTable = memo(({filterProducts, handleCheck}) => {
     console.log(`元件更新觸發`);
     return (<table className='table'>
       <tbody>
@@ -54,6 +54,7 @@
             <tr key={product.id}>
               <td>{product.title}</td>
               <td>{product.price}</td>
+              <td><input type="checkbox" onChange={handleCheck} value={product.title} /></td>
             </tr>
           );
         })}
@@ -66,7 +67,8 @@
     const [products, setProducts] = useState(sampleData);
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
-    const [text, setText] = useState('')
+    const [text, setText] = useState('');
+    const [items, setItems] = useState([]);
 
     const filterProducts = useMemo(() => {
       return [...products]
@@ -77,6 +79,31 @@
           return ascending ? a.price - b.price : b.price - a.price;
         });
     }, [ascending, search]);
+
+
+    // 測試"額外新增的字串"的輸入框，當它的值改變時，App 會重新 render，但 DataTable 不會重新 render，因為 handleCheck 函式沒有被重新定義，所以它的參考位置沒有改變，DataTable 的 Props 沒有改變，所以 DataTable 不會重新 render
+    // const handleCheck = ((e) => {
+    //   console.log('handleCheck 已被觸發!!');
+
+    //   if(e.target.checked) {
+    //     setItems((items) => [...items, e.target.value]);
+    //   } else {
+    //     setItems((items) => items.filter((item) => item !== e.target.value));
+    //   }
+    // });
+
+    
+    // 使用 useCallback 來優化 handleCheck 函式，讓它在 App 重新 render 時不會被重新定義，只有在 setItems 更新時才會重新定義
+    const handleCheck = useCallback((e) => {
+      console.log('handleCheck 已被觸發!!');
+
+      if(e.target.checked) {
+        setItems((items) => [...items, e.target.value]);
+      } else {
+        setItems((items) => items.filter((item) => item !== e.target.value));
+      }
+    }, [setItems]);
+    // 依賴 setItems，因為它是 useState 的更新函式，React 保證它在整個生命週期中都是穩定的，所以不會改變，因此 handleCheck 只會在 setItems 更新時才會重新定義
 
     return (
       <>
@@ -99,7 +126,10 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <DataTable filterProducts={filterProducts}></DataTable>
+        <br />
+        選取的項目：{items.join(', ')}
+
+        <DataTable filterProducts={filterProducts} handleCheck={handleCheck}></DataTable>
       </>
     );
   };

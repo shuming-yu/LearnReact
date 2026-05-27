@@ -46,6 +46,7 @@
   ];
 
 
+  // 可檢視每次父元件 App 重新 render 時，DataTable 都會重新 render
   // const DataTable = ({filterProducts}) => {
   //   console.log('DataTable render');
 
@@ -66,7 +67,7 @@
   // }
 
 
-  // memo
+  // 使用 memo 被改為成 Props 更新時才重新渲染元件
   const DataTable = memo(({filterProducts}) => {
     console.log('DataTable render memo');
 
