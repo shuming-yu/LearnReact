@@ -29,14 +29,36 @@ const Greeting = () => {
   </>
 }
 
-const App = () => {
+const UserProvider = ({ children }) => {
   const [username, setUsername] = useState('卡斯伯');
+  const [isLogin, setIsLogin] = useState(false);
+
+  return <UserContext.Provider value={{ username, setUsername, isLogin, setIsLogin }}>
+    { children }
+  </UserContext.Provider>
+}
+
+const Dashboard = () => {
+  const { isLogin } = useContext(UserContext);
+
+  return (<> { isLogin ? <Greeting /> : <LoginForm /> } </>)
+}
+
+const App = () => {
+  {/*const [username, setUsername] = useState('卡斯伯');
   const [isLogin, setIsLogin] = useState(false);
 
   return (<>
     <UserContext.Provider value={{ username, setUsername, setIsLogin }}>
       { isLogin ? <Greeting /> : <LoginForm /> }
     </UserContext.Provider>
+  </>)
+  */}
+
+  return (<>
+    <UserProvider>
+      <Dashboard />
+    </UserProvider>
   </>)
 }
 
