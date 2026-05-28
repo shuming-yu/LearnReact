@@ -5,32 +5,58 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, createContext, useContext } = React;
+
+// 建立共用環境
+const UserContext = createContext({});
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('卡斯伯');
+  // const [username, setUsername] = useState('卡斯伯');
+  const { username, setUsername, setIsLogin } = useContext(UserContext);
   
   return (<>
     <label htmlFor="username">使用者名稱</label>
+
     <input type="text" id="username"
       value={username}
       onChange={e => setUsername(e.target.value)}
       placeholder="請輸入使用者名稱" />
-    <button type="button">登入</button>
+    { username }
+
+    <button type="button" onClick={() => setIsLogin(true)}>登入</button>
   </>)
 }
 
+const DeepComponent = () => {
+  const { username } = useContext(UserContext);
+
+  return <div>
+    這是一個很深的元件，使用者名稱： {username}
+  </div>
+}
+
 const Greeting = () => {
+  const { username } = useContext(UserContext);
+
   return <>
-    xxx 你好, 歡迎登入
+    {username} 你好, 歡迎登入
+
+    <DeepComponent />
   </>
 }
 
 const App = () => {
+  const [username, setUsername] = useState('卡斯伯');
+  const [isLogin, setIsLogin] = useState(false);
+
   return (<>
-    <LoginForm />
-      <hr />
-    <Greeting />
+    <UserContext.Provider value={{ username, setUsername, setIsLogin }}>
+      { isLogin ? <Greeting /> : <LoginForm /> }
+      {/*<LoginForm />
+        <hr />
+      <Greeting />
+      */}
+    </UserContext.Provider>
   </>)
 }
 

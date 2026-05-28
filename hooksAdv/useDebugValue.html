@@ -5,10 +5,13 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, useDebugValue } = React;
 
 function useMousePosition() {
   const [mouse, setMouse] = useState({});
+
+  // useDebugValue 可以讓我們在 React Developer Tools 中看到自定義 Hook 的狀態，這樣在除錯的時候就可以更方便地查看自定義 Hook 的狀態。
+  useDebugValue(mouse);
 
   useEffect(() => {
     const getMouseEvent = (e) => {
@@ -36,6 +39,9 @@ const App = () => {
 
 
   return (<>
+    擴充工具: React Developer Tools <br />
+    F12 開發者工具，選擇 Components，可以看到目前的 state 和 props <br />
+
     {mouse.x} {mouse.y}
     <input type="text" onChange={e => {
       setText(e.target.value)

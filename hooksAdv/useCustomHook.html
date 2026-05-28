@@ -7,10 +7,45 @@
 <script type="text/babel">
 const { useState, useEffect } = React;
 
+const useMousePosition = () => {
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMouse({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  return mouse;
+};
+
 const App = () => {
-  const [text, setText] = useState('')
+  const [text, setText] = useState('');
+  // const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  // useEffect(() => {
+  //   const handleMouseMove = (e) => {
+  //     setMouse({ x: e.clientX, y: e.clientY });
+  //   };
+
+  //   window.addEventListener('mousemove', handleMouseMove);
+
+  //   return () => {
+  //     window.removeEventListener('mousemove', handleMouseMove);
+  //   };
+  // }, []);
+
+  const mouse = useMousePosition();
 
   return (<>
+    {`目前滑鼠位置：x: ${mouse.x}, y: ${mouse.y}`}
+
     <input type="text" onChange={e => {
       setText(e.target.value)
     }} />
