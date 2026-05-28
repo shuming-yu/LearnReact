@@ -6,7 +6,7 @@
 
 <div id="root"></div>
 <script type="text/babel">
-  const { useState, useEffect, useMemo, memo, useCallback } = React;
+  const { useState, useEffect, useMemo, memo, useCallback, useLayoutEffect } = React;
   const sampleData = [
     {
       id: 1,
@@ -48,7 +48,7 @@
   // 使用 memo
   const DataTable = memo(({products, handleSelectCheck}) => {
     console.log(`元件更新觸發`);
-    return (<table className='table'>
+    return (<table className='table table-dark'>
       <thead>
         <tr>
           <td>品項</td>
@@ -80,6 +80,38 @@
     const [items, setItems] = useState([]);
 
     const [text, setText] = useState('');
+
+    // useLayoutEffect 的觸發時機是在畫面渲染之前，所以在 useLayoutEffect 中的程式碼會先於畫面渲染執行，這也是為什麼 useLayoutEffect 的執行時間會比 useEffect 還要早的原因。
+
+    console.time('useEffect');
+    console.time('useLayoutEffect');
+
+    useLayoutEffect(() => {
+      console.log('useLayoutEffect 已被觸發');
+
+      const array = [];
+      for (let i = 0; i < 100000000; i++) {
+        array.push('asfsf safdsdf sf  safs a aaaaaaaaabbbbbbbbccccccccc asfsadf');
+      }
+
+      // setProducts(sampleData);
+
+      console.timeEnd('useLayoutEffect');
+    }, []);
+
+
+    useEffect(() => {
+      console.log('useEffect 已被觸發');
+
+      const array = [];
+      for (let i = 0; i < 100000000; i++) {
+        array.push('asfsf safdsdf sf  safs a aaaaaaaaabbbbbbbbccccccccc asfsadf');
+      }
+
+      setProducts(sampleData);
+
+      console.timeEnd('useEffect');
+    }, []);
     
     // ======
     const handleSelectCheck = useCallback((e) => {
@@ -94,6 +126,13 @@
 
     return (
       <>
+        元件初始化的生命週期: <br />
+        1. function 元件 <br />
+        2. 建立 virtual DOMDOM <br />
+        3. useLayoutEffect <br />
+        4. 畫面渲染 <br />
+        5. 呼叫 useEffect <br />
+
         <input type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
