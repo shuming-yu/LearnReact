@@ -9,19 +9,61 @@
   const { useState, useReducer } = React;
 
   const App = () => {
-    const [num, setNum] = useState(0)
+    // const [num, setNum] = useState(0);
+    // const [state, dispatch] = useReducer((state, action) => {
+    //   console.log("state", state);
+    //   console.log("action", action);
+
+    //   switch (action.type) {
+    //     case 'increment':
+    //       return state + 1;
+    //     case 'decrement':
+    //       return state - 1;
+    //     default:
+    //       return state;
+    //   }
+    // }, 0);
+
+
+    const [state, dispatch] = useReducer(
+      function (state, action) {
+        console.log("state", state);
+        console.log("action", action);
+
+        switch (action.type) {
+          case 'increment':
+            return { num: state.num + action.payload };
+          case 'decrement':
+            return { num: state.num - 10 };
+          case 'setNum':
+            return { num: action.payload };
+          default:
+            return state;
+        }
+      },
+      { num: 0 }
+    );
+
     function increment() {
-      setNum( num + 1);
+      // setNum( num + 1);
+      // type 用來判斷行為使用, payload 用來傳遞資料
+      dispatch({ type: 'increment', payload: 10 });
     }
     function decrement() {
-      setNum( num - 1);
+      // setNum( num - 1);
+      dispatch({ type: 'decrement' });
+    }
+    function setNum(e) {
+      dispatch({ type: 'setNum', payload: parseInt(e.target.value) });
     }
 
     return (
       <>
         <button type="button" onClick={() => decrement() }>-</button>
-        {num}
+        {/*{num}*/}
+        { state.num }
         <button type="button" onClick={() => increment() }>+</button>
+        <input type="text" onChange={(e) => setNum(e)} />
       </>
     );
   };
